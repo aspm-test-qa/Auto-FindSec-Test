@@ -15,11 +15,10 @@ jobs:
     steps:
       - name: Get source code
         uses: cloudbees-io/checkout@v1  
-      - id: build-container
-        name: Build container Image
-        uses: docker://gcr.io/kaniko-project/executor:debug
+      - name: Build Java App
+        uses: docker://maven:3.8.4-eclipse-temurin-17
         run: |
-          /kaniko/executor --context $CLOUDBEES_WORKSPACE --build-arg USER=cbp-qa-automation,TOKEN=${{ secrets.GH_SECURITY_PAT }} --dockerfile $CLOUDBEES_WORKSPACE/Dockerfile --tar-path $CLOUDBEES_WORKSPACE/container-image.tar --no-push
+          mvn clean package
       - id: upload-binary
         name: Upload binary using action
         uses: cloudbees-io/asset-chain-utils-preprod/upload-binary@v1
